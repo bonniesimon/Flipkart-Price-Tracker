@@ -24,7 +24,7 @@ let url = 'https://www.flipkart.com/flipkart-smartbuy-mp406-mousepad/p/itm832563
 
 
 
-
+//*function to log the details by arguments from the scraping inside getStatus function
 const logStatus = (name, price, rating, availability) => {
     console.log('Name : ',name.text());
     console.log('Price : ',price.text());
@@ -74,45 +74,66 @@ const getStatus = async (urlValue) => {
 
 
 /**
- *TODO: function for if the file is not created
+ *TODO: function for if the file is not present
  *TODO: adding id's to the objects
  *TODO: adding data and time to the objects to find the price changes
  *TODO: using setTimeOut to schedule the scraping
  */
 
 //Declaring data to be stored in json file
-let database = {};
+let database = {dataTable:[]};
 let val,json;
 
 //init function that runs when server active
 const init = () => {
     val = getStatus(url);
     val.then(result => {
-            fs.readFile('database.json',(err ,data) => {
-                if(err){
-                    console.log(err);
-                }else{
-                    //extracting the old data and parsing it to an object (which means converting it to an object)
-                    database = JSON.parse(data);
-                    //push the present data to the existing data
+            console.log(result);
+            try{
+                if(!fs.existsSync('./database.json')){
                     database.dataTable.push(result);
-                    //write the data back to the database to update the database.json file
                     json = JSON.stringify(database);
-                    fs.writeFile('database.json',json,(err) => {
+                    fs.writeFile('database.json',json,(err)=>{
                         if(err){
                             console.log(err);
                         }
-                    });
-
+                    })
+                }else{
+                    fs.readFile('database.json',(err ,data) => {
+                        if(err){
+                            console.log(err);
+                        }else{
+                            //extracting the old data and parsing it to an object (which means converting it to an object)
+                            database = JSON.parse(data);
+                            //push the present data to the existing data
+                            database.dataTable.push(result);
+                            //write the data back to the database to update the database.json file
+                            json = JSON.stringify(database);
+                            fs.writeFile('database.json',json,(err) => {
+                                if(err){
+                                    console.log(err);
+                                }
+                            });
+        
+                        }
+                        
+                    })
                 }
-                
-            })
+            }catch(err){
+                if(err){
+                    console.log(err);
+                }
+            }
         });
 }
 
 
 
-init();
+
+
+
+setInterval(init, 10000);
+
 
 
 app.listen(8080,()=>console.log('Server Running @ PORT 3000!!'));
