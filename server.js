@@ -73,6 +73,13 @@ const getStatus = async (urlValue) => {
 }
 
 
+/**
+ *TODO: function for if the file is not created
+ *TODO: adding id's to the objects
+ *TODO: adding data and time to the objects to find the price changes
+ *TODO: using setTimeOut to schedule the scraping
+ */
+
 //Declaring data to be stored in json file
 let database = {};
 let val,json;
@@ -81,10 +88,6 @@ let val,json;
 const init = () => {
     val = getStatus(url);
     val.then(result => {
-            console.log(result);
-            // database.dataTable.push(result);
-            // console.log(database);
-            // json = JSON.stringify(database);
             fs.readFile('database.json',(err ,data) => {
                 if(err){
                     console.log(err);
@@ -93,7 +96,14 @@ const init = () => {
                     database = JSON.parse(data);
                     //push the present data to the existing data
                     database.dataTable.push(result);
-                    c
+                    //write the data back to the database to update the database.json file
+                    json = JSON.stringify(database);
+                    fs.writeFile('database.json',json,(err) => {
+                        if(err){
+                            console.log(err);
+                        }
+                    });
+
                 }
                 
             })
@@ -103,6 +113,7 @@ const init = () => {
 
 
 init();
+
 
 app.listen(8080,()=>console.log('Server Running @ PORT 3000!!'));
 
