@@ -4,7 +4,7 @@
   "description": "A server to fetch price from flipkart",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon server"
   },
   "keywords": [
     "web-scraper"
@@ -12,6 +12,7 @@
   "author": "Bonnie Simon",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
     "express": "^4.17.1",
     "request": "^2.88.0"
