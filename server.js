@@ -1,6 +1,7 @@
 const express = require('express');
 const cheerio = require('cheerio');
 const axios = require('axios');
+const cron = require('node-cron');
 const bodyParser = require('body-parser');
 const app = express();
 const fs = require('fs');
@@ -74,7 +75,6 @@ const getStatus = async (urlValue) => {
 
 
 /**
- *TODO: function for if the file is not present
  *TODO: adding id's to the objects
  *TODO: adding data and time to the objects to find the price changes
  *TODO: using setTimeOut to schedule the scraping
@@ -132,7 +132,20 @@ const init = () => {
 
 
 
-setInterval(init, 10000);
+// setInterval(init, 10000);
+
+/**-----------------------------------------------
+ * *Cron Job Guide
+ * Using this for scheduling as serInterval is not efficient;
+ * to run a task every 5th second of a minute use '5 * * * * *'
+ * to run a task every 5 seconds, use , "* /5" (without space between * and /) instead of "5" represents every 5 seconds;
+ ---------------------------------------------------------*/
+
+ 
+cron.schedule('*/10 * * * * *',()=>{
+    console.log('Running every 5 seconds thanks to cron\n');
+    init();
+})
 
 
 
