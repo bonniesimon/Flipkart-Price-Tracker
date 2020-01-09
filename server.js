@@ -39,6 +39,7 @@ const logStatus = (name, price, rating, availability) => {
 }
 
 
+let currentDate = new Date();
 
 const getStatus = async (urlValue) => {
     try{
@@ -58,6 +59,8 @@ const getStatus = async (urlValue) => {
             availabilityStatus = availability.text();
         }
         let details = {
+            date : `${currentDate.getDate()}/${currentDate.getMonth()+1}/${currentDate.getFullYear()}`,
+            time : `${currentDate.getHours()}:${currentDate.getMinutes()}:${currentDate.getSeconds()}`,
             name : productName.text(),
             rating : rating.text().slice(0,3),
             availability : availabilityStatus,
@@ -76,15 +79,18 @@ const getStatus = async (urlValue) => {
 
 /**
  *TODO: adding id's to the objects
- *TODO: adding data and time to the objects to find the price changes
- *TODO: using setTimeOut to schedule the scraping
+ *TODO: deploy to glitch
  */
 
 //Declaring data to be stored in json file
 let database = {dataTable:[]};
 let val,json;
 
-//init function that runs when server active
+/**
+ * *Init Function
+ * Main function which call the scrape function 
+ * Writes and update scraped data to json file
+ */
 const init = () => {
     val = getStatus(url);
     val.then(result => {
@@ -112,6 +118,8 @@ const init = () => {
                             fs.writeFile('database.json',json,(err) => {
                                 if(err){
                                     console.log(err);
+                                }else{
+                                    console.log("Successfully Wrote into File");
                                 }
                             });
         
@@ -132,7 +140,7 @@ const init = () => {
 
 
 
-// setInterval(init, 10000);
+//// setInterval(init, 10000);
 
 /**-----------------------------------------------
  * *Cron Job Guide
@@ -142,8 +150,9 @@ const init = () => {
  ---------------------------------------------------------*/
 
  
-cron.schedule('*/10 * * * * *',()=>{
-    console.log('Running every 5 seconds thanks to cron\n');
+let interval = '10'; 
+cron.schedule(`*/${interval} * * * * *`,()=>{
+    console.log('Running every 10 seconds thanks to cron\n');
     init();
 })
 
