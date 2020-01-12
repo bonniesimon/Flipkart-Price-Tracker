@@ -79,7 +79,6 @@ const getStatus = async (urlValue) => {
 
 /**
  *TODO: adding id's to the objects
- *TODO: deploy to glitch
  */
 
 //Declaring data to be stored in json file
