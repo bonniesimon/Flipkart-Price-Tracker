@@ -1,4 +1,11 @@
 let ctx = document.getElementById('myChart');
+let title = document.querySelector('.card-title');
+let rating = document.querySelector('#rating');
+let price = document.querySelector('#price');
+let availability = document.querySelector('#availability');
+
+let databasePrice = [];
+let databaseTime = [];
 console.log(ctx);
 
 /**
@@ -6,41 +13,36 @@ console.log(ctx);
  */
 fetch('../../database.json')
     .then(res => res.json())
-    .then(json => console.log(json));
+    .then(json => {
+        // console.log(json.dataTable);
+        json.dataTable.forEach(elementObj => {
+            /**
+             * *Here we are slicing the string to avoid '₹'
+             */
+            databasePrice.push(parseInt(elementObj.price.slice(1,elementObj.price.length),10));
+            databaseTime.push(elementObj.time);
+            
+        })
 
-let myChart = new Chart(ctx,  {
-    type: 'bar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'killar'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
+        createChart(databaseTime, databasePrice);
+    });
+
+
+
+
+const createChart = (time/**X-axis */, price/**Y-axis */) =>{
+
+    let myChart = new Chart(ctx,  {
+        type: 'bar',
+        data: {
+            //x-axis
+            labels: time,
+            datasets: [{
+                label: 'Price History',
+                //y-axis
+                data: price, 
             }]
         }
-    }
-});
+    });
+}
+    
