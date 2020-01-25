@@ -5,6 +5,7 @@ const cron = require('node-cron');
 const bodyParser = require('body-parser');
 const app = express();
 const fs = require('fs');
+const path = require('path');
 
 
 
@@ -79,6 +80,8 @@ const getStatus = async (urlValue) => {
 
 /**
  *TODO: adding id's to the objects
+ *TODO: restricting the no. of elements inside the dataTable array
+ *TODO: including get request to serve frontend files
  */
 
 //Declaring data to be stored in json file
@@ -133,7 +136,6 @@ const init = () => {
             }
         });
 }
-
 
 
 
